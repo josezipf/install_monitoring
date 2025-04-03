@@ -9,3 +9,4 @@
     - populate_mysql_zabbix
     - zabbix_server_ubuntu
     - zabbix_frontend_ubuntu
+    - zabbix_agent_snmp
