@@ -1,0 +1,8 @@
+---
+- name: Restart Zabbix Agent
+  service:
+    name: zabbix-agent
+    state: restarted
+  become: true
+
+# handlers file for zabbix_agent_snmp

@@ -1,0 +1,21 @@
+---
+- name: Atualizar pacotes e instalar Zabbix Agent e SNMP
+  apt:
+    name:
+      - zabbix-agent
+      - snmp
+      - snmp-mibs-downloader
+    state: latest
+    update_cache: yes
+  become: true
+  notify: Restart Zabbix Agent
+
+- name: Habilitar e iniciar serviços
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop:
+    - zabbix-agent
+  become: true
+# tasks file for zabbix_agent_snmp
