@@ -1,4 +1,9 @@
----
+- name: Instalar pacote de scripts SQL do Zabbix
+  apt:
+    name: zabbix-sql-scripts
+    state: present
+  become: true
+
 - name: Verificar se a tabela 'users' do Zabbix existe
   mysql_query:
     login_user: "{{ mysql_zabbix_user }}"
