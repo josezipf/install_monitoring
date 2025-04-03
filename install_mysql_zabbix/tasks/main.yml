@@ -1,0 +1,53 @@
+---
+- name: Atualizar pacotes
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Instalar MySQL 8
+  apt:
+    name: mysql-server
+    state: present
+
+- name: Habilitar e iniciar serviço MySQL
+  systemd:
+    name: mysql
+    enabled: yes
+    state: started
+
+- name: Verificar se a senha do root já está configurada
+  command: mysql -u root -p"{{ mysql_root_password }}" -e "SELECT 1;"
+  register: mysql_root_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Configurar senha do root do MySQL (somente se necessário)
+  mysql_user:
+    name: root
+    host: localhost
+    password: "{{ mysql_root_password }}"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    login_host: localhost
+  when: mysql_root_check.failed
+  become: true
+
+- name: Criar banco de dados do Zabbix
+  mysql_db:
+    name: "{{ mysql_database }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Criar usuário do Zabbix no MySQL com permissões restritas
+  mysql_user:
+    name: "{{ mysql_zabbix_user }}"
+    password: "{{ mysql_zabbix_password }}"
+    priv: "zabbix.*:ALL"
+    host: localhost
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  become: true
+
+# tasks file for install_mysql_zabbix

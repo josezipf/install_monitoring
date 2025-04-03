@@ -1,0 +1,6 @@
+---
+mysql_root_password: "SenhaForte123"
+mysql_zabbix_user: "zabbix"
+mysql_zabbix_password: "SenhaZabbix123"
+mysql_database: "zabbix"
+# vars file for install_mysql_zabbix

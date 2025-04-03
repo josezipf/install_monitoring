@@ -1,0 +1,10 @@
+---
+- name: Testar instalação do MySQL
+  hosts: localhost
+  become: yes
+  roles:
+    - install_mysql_zabbix
+    - repository_ubuntu_zabbix
+    - populate_mysql_zabbix
+    - zabbix_server_ubuntu
+    - zabbix_frontend_ubuntu

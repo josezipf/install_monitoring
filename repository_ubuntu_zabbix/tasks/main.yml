@@ -1,0 +1,13 @@
+---
+- name: Baixar e instalar o pacote de repositório do Zabbix para Ubuntu 24.04
+  apt:
+    deb: "{{ zabbix_repo_url }}"
+    state: present
+  become: true
+
+- name: Atualizar os pacotes do sistema
+  apt:
+    upgrade: dist
+    update_cache: yes
+  become: true
+# tasks file for repository_ubuntu_zabbix

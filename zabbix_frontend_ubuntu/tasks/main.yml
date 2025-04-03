@@ -1,0 +1,26 @@
+---
+- name: Instalar pacotes do frontend
+  apt:
+    name: "{{ zabbix_frontend_packages }}"
+    state: latest
+    update_cache: yes
+  become: true
+  notify: Restart Apache
+
+- name: Configurar arquivo do frontend
+  template:
+    src: zabbix.conf.php.j2
+    dest: /etc/zabbix/web/zabbix.conf.php
+    owner: www-data
+    group: www-data
+    mode: 0640
+  become: true
+  notify: Restart Apache
+
+- name: Habilitar e iniciar Apache
+  service:
+    name: apache2
+    state: started
+    enabled: yes
+  become: true
+# tasks file for zabbix_frontend_ubuntu

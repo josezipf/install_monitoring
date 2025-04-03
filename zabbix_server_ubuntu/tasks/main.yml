@@ -1,0 +1,27 @@
+---
+- name: Instalar pacotes do Zabbix Server
+  apt:
+    name:
+      - zabbix-server-mysql
+    state: latest
+    update_cache: yes
+  become: true
+  notify: Restart Zabbix Server
+
+- name: Configurar arquivo do Zabbix Server
+  template:
+    src: zabbix_server.conf.j2
+    dest: /etc/zabbix/zabbix_server.conf
+    owner: zabbix
+    group: zabbix
+    mode: 0640
+  become: true
+  notify: Restart Zabbix Server
+
+- name: Habilitar e iniciar serviço Zabbix Server
+  service:
+    name: zabbix-server
+    state: started
+    enabled: yes
+  become: true
+# tasks file for zabbix_server_ubuntu

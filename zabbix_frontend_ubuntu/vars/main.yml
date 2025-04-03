@@ -1,0 +1,15 @@
+---
+# Configurações do frontend
+zabbix_frontend_packages:
+  - zabbix-frontend-php
+  - zabbix-apache-conf
+  - php8.3
+  - php8.3-mysql
+  - php8.3-gd
+  - php8.3-bcmath
+  - php8.3-mbstring
+  - php8.3-xml
+  - php8.3-ldap
+# Configurações de timezone (ajuste para seu fuso horário)
+php_timezone: "America/Sao_Paulo"
+# vars file for zabbix_frontend_ubuntu

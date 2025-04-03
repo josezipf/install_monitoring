@@ -1,0 +1,47 @@
+---
+- name: Verificar se a tabela 'users' do Zabbix existe
+  mysql_query:
+    login_user: "{{ mysql_zabbix_user }}"
+    login_password: "{{ mysql_zabbix_password }}"
+    login_db: "{{ mysql_database }}"
+    query: "SELECT 1 FROM users LIMIT 1;"
+  register: zabbix_check
+  ignore_errors: yes
+  changed_when: false
+
+- name: Importar banco de dados Zabbix (se necessário)
+  block:
+    - name: Ajustar parâmetro MySQL temporariamente
+      mysql_variables:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        variable: "log_bin_trust_function_creators"
+        value: "ON"
+      when: zabbix_check is failed
+
+    - name: Executar importação
+      shell: |
+        mysql -u {{ mysql_zabbix_user }} -p{{ mysql_zabbix_password }} \
+        {{ mysql_database }} < <(zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz)
+      args:
+        executable: /bin/bash
+      register: import_result
+      when: zabbix_check is failed
+      no_log: true
+
+  rescue:
+    - name: Registrar falha
+      debug:
+        msg: "Falha na importação: {{ import_result.stderr | default(import_result.msg) }}"
+
+    - fail:
+        msg: "Falha crítica na importação"
+
+  always:
+    - name: Restaurar configuração segura
+      mysql_variables:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        variable: "log_bin_trust_function_creators"
+        value: "OFF"
+      when: zabbix_check is failed
