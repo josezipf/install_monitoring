@@ -1,4 +1,9 @@
 ---
+- name: Verificar se o sistema é Ubuntu 24.04
+  ansible.builtin.fail:
+    msg: "Este playbook só pode ser executado no Ubuntu 24.04!"
+  when: ansible_distribution != "Ubuntu" or ansible_distribution_version != "24.04"
+
 - name: Atualizar cache do APT
   apt:
     update_cache: yes

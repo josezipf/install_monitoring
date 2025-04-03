@@ -32,7 +32,6 @@
         executable: /bin/bash
       register: import_result
       when: zabbix_check is failed
-      no_log: true
 
   rescue:
     - name: Registrar falha

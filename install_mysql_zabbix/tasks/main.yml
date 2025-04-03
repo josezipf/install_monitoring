@@ -33,3 +33,14 @@
     login_user: root
     login_password: "{{ mysql_root_password }}"
   become: true
+
+- name: Criar usuário do MySQL para o Zabbix
+  mysql_user:
+    name: "{{ mysql_zabbix_user }}"
+    password: "{{ mysql_zabbix_password }}"
+    priv: "{{ mysql_database }}.*:ALL"
+    host: "localhost"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  become: true

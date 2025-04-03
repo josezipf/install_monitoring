@@ -7,7 +7,6 @@
 
 - name: Atualizar os pacotes do sistema
   apt:
-    upgrade: dist
     update_cache: yes
   become: true
 # tasks file for repository_ubuntu_zabbix
